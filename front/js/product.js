@@ -1,10 +1,6 @@
 let product = [];
-
 let params = new URLSearchParams(document.location.search);
 let id = params.get("id");
-let quantityInput = document.querySelector('#quantity');
-let colorSelected = document.querySelector("#colors");
-
 let cartInfo = {
     id: "",
     quantityItem: "",
@@ -39,40 +35,43 @@ async function productDisplay() {
         }
     }
     colorsList();
-}
-
+};
 productDisplay();
 
 
-function ProductAddInfo() {
+// Ajout infos Panier
 
-    document.getElementById("addToCart").addEventListener("click", function () {
+document.querySelector("#colors").addEventListener("input", function (color) {
+    cartInfo.colorItem = color.target.value;
+})
+document.querySelector("#quantity").addEventListener("change", function (number) {
+    cartInfo.quantityItem = parseInt(number.target.value);
+})
+cartInfo.id = id;
 
-        cartInfo.id = product._id;
-        cartInfo.quantityItem = quantityInput.value;
-        cartInfo.colorItem = colorSelected.value;
+document.querySelector("#addToCart").addEventListener("click", function lol() {
+    let storageAdd = JSON.parse(localStorage.getItem("cart"));
 
-        let storageAdd = JSON.parse(localStorage.getItem("cart"));
+    if (storageAdd) {
+        let searchItem = storageAdd.find((element) => element.id == cartInfo.id && element.colorItem == cartInfo.colorItem);
 
-        if (storageAdd) {
-            let searchItem = storageAdd.find((element) => element.id == cartInfo.id && element.colorItem == cartInfo.colorItem);
-
-            if (searchItem) {
-                searchItem.quantityItem += cartInfo.quantityItem;
-                localStorage.setItem("cart", JSON.stringify(storageAdd));
-                console.log(storageAdd);
-            }
+        if (searchItem) {
+            searchItem.quantityItem += cartInfo.quantityItem;
+            localStorage.setItem("cart", JSON.stringify(storageAdd));
+            console.log(storageAdd);
         } else {
-            let storageAdd = [];
             storageAdd.push(cartInfo);
-            localStorage.setItem("cart", JSON.stringify(storageAdd)); console.log(storageAdd);
+            localStorage.setItem("cart", JSON.stringify(storageAdd));
+            console.log(storageAdd);
         }
+    } else {
+        let storageAdd = [];
+        storageAdd.push(cartInfo);
+        localStorage.setItem("cart", JSON.stringify(storageAdd)); console.log(storageAdd);
     }
-
-    )
-
 }
-ProductAddInfo();
+
+)
 
 
 
