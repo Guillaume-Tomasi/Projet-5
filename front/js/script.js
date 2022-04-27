@@ -7,40 +7,27 @@ let products = [];
 async function fetchApi() {
     await fetch("http://localhost:3000/api/products")
         .then(function (res) {
-                return res.json();
+            return res.json();
         })
-        .then(function (allProducts) {
-            products = allProducts;
+        .then(function (data) {
+            products = data;
         })
 }
 
-// Implémentation des produits sur la page
+// // Implémentation des produits sur la page
+
 async function productsDisplay() {
     await fetchApi();
-    let items = document.getElementById("items");
-
+    document.getElementById("items");
     for (let i = 0; i < products.length; i++) {
-        let link = document.createElement("a");
-        let card_item = document.createElement("article");
-        let card_img = document.createElement("img"); 
-        let card_name = document.createElement("h3");
-        let card_description = document.createElement("p");
-
-        items.appendChild(link);
-        link.appendChild(card_item);
-        card_item.append(card_img, card_name, card_description);
-
-        items.classList.add("items");
-        card_name.classList.add("productName");
-        card_description.classList.add("productDescription");
-
-        link.href = `./product.html?id=${products[i]._id}`;
-        card_img.src = products[i].imageUrl;
-        card_img.alt = products[i].altTxt;
-        card_name.textContent = products[i].name;
-        card_description.textContent = products[i].description;
-        
+        let text = `<a href="./product.html?id=${products[i]._id}">
+        <article>
+          <img src="${products[i].imageUrl}" alt="${products[i].altTxt}">
+          <h3 class="productName">${products[i].name}</h3>
+          <p class="productDescription">${products[i].description}</p>
+        </article>
+      </a>`
+        document.getElementById("items").insertAdjacentHTML("beforeend", text);
     }
 }
 productsDisplay();
-
