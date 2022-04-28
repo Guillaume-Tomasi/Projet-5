@@ -8,12 +8,12 @@ let contact = {
 };
 let products = [];
 
-
 // Affichage panier
 
 async function cartDisplay() {
   if (cart) {
     let cart__items = document.getElementById("cart__items");
+
     for (let items of cart) {
       await fetch(`http://localhost:3000/api/products/${items.id}`)
         .then(function (res) {
@@ -49,69 +49,65 @@ async function cartDisplay() {
               </div>
             </div>
           </article>`;
+
       cart__items.insertAdjacentHTML("beforeend", text);
     }
-
-
-
 
     let articles = document.querySelectorAll(".cart__item");
     let quantity = document.querySelectorAll(".itemQuantity");
     let deleteItm = document.querySelectorAll(".deleteItem");
 
+    // Actualisation quand changement de quantité
 
-
+    function totalqty() {
+      for (let i = 0; i < articles.length; i++) {
+        quantity[i].addEventListener("change", function (number) {
+          number.preventDefault();
+          cart[i].quantityItem = parseInt(number.target.value);
+          localStorage.setItem("cart", JSON.stringify(cart));
+          location.reload();
+          refresh();
+        });
+      }
+    }
+    totalqty();
 
     // Actualisation quand article supprimé
-    for (let i = 0; i < articles.length; i++) {
+
+    for (let i = 0; i < cart.length; i++) {
       let cart = JSON.parse(localStorage.getItem("cart"));
-      deleteItm[i].addEventListener("click", function () {
+
+      deleteItm[i].addEventListener("click", function (e) {
+        e.preventDefault();
         let newCart = cart.filter(function (items) {
           return items.id != cart[i].id || items.colorItem != cart[i].colorItem;
         });
         document.querySelector(`[data-id='${cart[i].id}']` && `[data-color='${cart[i].colorItem}']`).remove();
         cart = newCart;
         localStorage.setItem("cart", JSON.stringify(cart));
+        console.log(cart);
+        location.reload();
         refresh();
       });
     }
 
-
-
-
-    // Actualisation quand changement de quantité
-    function totalqty() {
-      for (let i = 0; i < articles.length; i++) {
-        quantity[i].addEventListener("change", function (number) {
-          cart[i].quantityItem = parseInt(number.target.value);
-          localStorage.setItem("cart", JSON.stringify(cart));
-          refresh();
-
-        });
-      }
-    }
-    totalqty();
-
-
-    // Actualisation total quantité et total prix
+    // Actualisation du total quantité et du prix total
 
     function refresh() {
-      let cart = JSON.parse(localStorage.getItem("cart"));
+      // let cart = JSON.parse(localStorage.getItem("cart"));
       let totalQty = 0;
       let totalPrice = 0;
 
       for (let i = 0; i < cart.length; i++) {
         totalQty += cart[i].quantityItem;
-        totalPrice += cart[i].price * cart[i].quantityItem;
-        console.log(totalQty);
+        totalPrice += (cart[i].price * cart[i].quantityItem);
+        console.log(cart);
       }
       document.getElementById("totalQuantity").textContent = totalQty;
       document.getElementById("totalPrice").textContent = totalPrice;
     }
     refresh();
   }
-
-
 
   // Si panier vide
 
@@ -125,69 +121,6 @@ cartDisplay();
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 // Formulaire
 
 let form = document.querySelectorAll(".cart__order__form__question");
@@ -195,8 +128,7 @@ let emailRegExp = /[a-zA-Z0-9]+[@]{1}[a-zA-Z0-9]+[.]{1}[a-z]{2,5}/;
 let globalRegExp = /^[a-zA-Z -]+$/;
 let addressRegExp = /^[a-zA-Z0-9éè, -]+$/;
 
-
-// Fonction qui vérifie la validité des inputs
+// Vérification de la validité des inputs
 
 function verifInputs(selectId, selectRegExp, errorMsg) {
   document.getElementById(selectId);
@@ -209,9 +141,11 @@ function verifInputs(selectId, selectRegExp, errorMsg) {
   }
 }
 
-async function verifForm(e) {
+// Stockage des coordonnées de l'utilisateur
 
+async function verifForm(e) {
   let errorMsgId = document.getElementById(`${e}ErrorMsg`);
+
   if (e == "email") {
     verifInputs(email, emailRegExp, errorMsgId);
     if (errorMsgId.textContent != "") {
@@ -236,7 +170,6 @@ async function verifForm(e) {
       contact.firstName = firstName.value;
     }
 
-
   } else if (e == "lastName") {
     verifInputs(lastName, globalRegExp, errorMsgId);
     if (errorMsgId.textContent != "") {
@@ -244,7 +177,6 @@ async function verifForm(e) {
     } else {
       contact.lastName = lastName.value;
     }
-
 
   } else {
     verifInputs(city, globalRegExp, errorMsgId);
@@ -254,10 +186,9 @@ async function verifForm(e) {
       contact.city = city.value;
     }
   }
-
 }
 
-// Fonction qui ajoute les produits au tableau
+// Ajout des produits au tableau
 
 async function pushProducts() {
   for (let item of cart) {
@@ -265,7 +196,7 @@ async function pushProducts() {
   }
 }
 
-// Fonction qui envoie 'contact' et 'products' à l'API
+// Envoi des coordonnées et du panier à l'API
 
 async function sendData() {
   await fetch("http://localhost:3000/api/products/order", {
@@ -287,9 +218,8 @@ async function sendData() {
     });
 }
 
-
-
 let question = document.querySelectorAll(".cart__order__form__question > input");
+
 for (let i = 0; i < question.length; i++) {
   question[i].addEventListener("click", function () {
     verifForm(question[i].id);
@@ -297,10 +227,11 @@ for (let i = 0; i < question.length; i++) {
   order.addEventListener("click", function (e) {
     e.preventDefault();
     verifForm(question[i].id);
-
-
   })
 }
+
+// Envoi de la commande 
+
 order.addEventListener("click", async function () {
   if (Object.keys(contact).length != 5) {
     alert("Coordonnées incorrectes");
@@ -314,31 +245,3 @@ order.addEventListener("click", async function () {
     }
   }
 })
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
