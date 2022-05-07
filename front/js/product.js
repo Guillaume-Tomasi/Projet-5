@@ -57,17 +57,18 @@ document.querySelector("#addToCart").addEventListener("click", function add() {
     } else if (cartInfo.quantityItem == "" || cartInfo.quantityItem >= 100) {
         alert("Nombre d'articles incorrect.");
     } else {
+
+        // Recherche dans le localstorage d'un produit identique à celui ajouté. S'il y en a un, modification de la quantité. Sinon, ajout d'un nouvel élément.
+
         if (storageAdd) {
             let searchItem = storageAdd.find((element) => element.id == cartInfo.id && element.colorItem == cartInfo.colorItem);
 
             if (searchItem) {
                 searchItem.quantityItem += cartInfo.quantityItem;
                 localStorage.setItem("cart", JSON.stringify(storageAdd));
-                console.log(storageAdd);
             } else {
                 storageAdd.push(cartInfo);
                 localStorage.setItem("cart", JSON.stringify(storageAdd));
-                console.log(storageAdd);
             }
         } else {
             let storageAdd = [];

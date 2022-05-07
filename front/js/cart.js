@@ -85,7 +85,6 @@ async function cartDisplay() {
         document.querySelector(`[data-id='${cart[i].id}']` && `[data-color='${cart[i].colorItem}']`).remove();
         cart = newCart;
         localStorage.setItem("cart", JSON.stringify(cart));
-        console.log(cart);
         location.reload();
         refresh();
       });
@@ -94,14 +93,12 @@ async function cartDisplay() {
     // Actualisation du total quantité et du prix total
 
     function refresh() {
-      // let cart = JSON.parse(localStorage.getItem("cart"));
       let totalQty = 0;
       let totalPrice = 0;
 
       for (let i = 0; i < cart.length; i++) {
         totalQty += cart[i].quantityItem;
         totalPrice += (cart[i].price * cart[i].quantityItem);
-        console.log(cart);
       }
       document.getElementById("totalQuantity").textContent = totalQty;
       document.getElementById("totalPrice").textContent = totalPrice;
