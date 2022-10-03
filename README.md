@@ -12,4 +12,4 @@ Vous devez avoir Node et Npm d'installés sur votre machine.
 
 - Lancer "node server" pour démarrer le serveur. 
 
-- Par défaut, le serveur se lancera sur 'http://localhost:3000', S'il se lance sur un autre port, celui-ci s'affichera dans la console.
+- Par défaut, le serveur se lancera sur "http://localhost:3000", S'il se lance sur un autre port, celui-ci s'affichera dans la console.
