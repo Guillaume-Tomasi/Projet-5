@@ -5,10 +5,6 @@ Projet 5 du parcours Développeur Web d'Openclassrooms - Construisez un site e-c
 Objectif : Unifier les travaux déjà réalisés par l’équipe en intégrant dynamiquement les éléments de l’API dans les différentes pages web avec JavaScript.
 
 
-### Prérequis ###
-
-Vous devez avoir Node et Npm d'installés sur votre machine.
-
 ### Installation Back end ###
 
 - Lancer "npm install" depuis le dossier "back".
