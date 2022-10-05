@@ -1,6 +1,6 @@
 # Kanap 
 
-Projet 4 du parcours Développeur Web d'Openclassrooms - Construisez un site e-commerce en JavaScript.
+Projet 5 du parcours Développeur Web d'Openclassrooms - Construisez un site e-commerce en JavaScript.
 
 Objectif : Unifier les travaux déjà réalisés par l’équipe en intégrant dynamiquement les éléments de l’API dans les différentes pages web avec JavaScript.
 
